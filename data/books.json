@@ -1,10 +1,6 @@
 {
   "books": [
     {
-      "bookNo": 1,
-      "bookName": "first"
-    },
-    {
       "bookNo": 2,
       "bookName": "frist"
     },
