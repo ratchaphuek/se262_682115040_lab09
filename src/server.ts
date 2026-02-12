@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import path from "path";
-import { addBook, readBooks } from "./services/bookFileDb";
+import { addBook, readBooks, deleteBook } from "./services/bookFileDb";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,8 +17,38 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get("/books", (req: Request, res: Response) => {
   // TODO 7: Return all books as JSON
-const books = readBooks(); return res.json(books);
+  const books = readBooks();
+
+  const search = ((req.query.search as string) || "").toLowerCase();
+
+  if (!search) {
+    return res.json(books);
+  }
+
+  const filteredBooks = books.filter(b =>
+    b.bookName.toLowerCase().includes(search)
+  );
+
+  return res.json(filteredBooks);
 });
+
+//challenge delete book
+app.delete("/books/:bookNo", (req: Request, res: Response) => {
+  const bookNo = Number(req.params.bookNo);
+
+  if (isNaN(bookNo)) {
+    return res.status(400).send("Invalid bookNo");
+  }
+
+  const success = deleteBook(bookNo);
+
+  if (!success) {
+    return res.status(404).send("Book not found");
+  }
+
+  return res.status(200).send("Deleted");
+});
+//end challenge delete book
 
 app.post("/books/add", (req: Request, res: Response) => {
   try {

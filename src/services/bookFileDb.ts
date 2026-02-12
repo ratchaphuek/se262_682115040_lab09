@@ -68,3 +68,19 @@ export function addBook(bookName: string): Book {
   return newBook;
   // TODO 4
 }
+//challenge delete book
+export function deleteBook(bookNo: number): boolean {
+  const db = readDb();
+
+  const originalLength = db.books.length;
+
+  db.books = db.books.filter(b => b.bookNo !== bookNo);
+
+  if (db.books.length === originalLength) {
+    return false; // ไม่เจอหนังสือ
+  }
+
+  writeDb(db);
+  return true;
+}
+
